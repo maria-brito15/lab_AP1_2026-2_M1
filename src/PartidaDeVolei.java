@@ -43,8 +43,10 @@ public class PartidaDeVolei {
      */
     public PartidaDeVolei(Equipe equipe1, Equipe equipe2) {
         equipes = new ArrayList<>(2);
+
         equipes.add(equipe1);
         equipes.add(equipe2);
+
         pontuacaoEquipe1 = new ArrayList<>(MAX_SETS);
         pontuacaoEquipe2 = new ArrayList<>(MAX_SETS);
         setsDisputados = 0;
@@ -86,18 +88,18 @@ public class PartidaDeVolei {
             time = equipes.get(0).getNome();
             pontos = pontuacaoEquipe1;
             sets = setsVencidos(equipes.get(0));
-        }
-        else{
+        } else{
             time = equipes.get(1).getNome();
             pontos = pontuacaoEquipe2;
             sets = setsVencidos(equipes.get(1));
         }
+
         StringBuilder linha = new StringBuilder();
         linha.append(String.format("%16s\t", time));
-        for (int j = 0; j < setsDisputados; j++)
-            linha.append(pontos.get(j)+ "\t");
-        for (int j = setsDisputados; j < MAX_SETS; j++)
-            linha.append(setZerado + "\t");
+
+        for (int j = 0; j < setsDisputados; j++) linha.append(pontos.get(j)+ "\t");
+        for (int j = setsDisputados; j < MAX_SETS; j++) linha.append(setZerado + "\t");
+
         linha.append(sets + "\n");
         
         return  linha.toString();
@@ -111,11 +113,14 @@ public class PartidaDeVolei {
      */
     private boolean validarPlacarSet(int pontos1, int pontos2){
         boolean resposta = false;
+
         int set = setsDisputados+1;
         int pontosMinimos = set==5 ? 15 : 25;
         int diferenca = pontos1 - pontos2;
         int pontosVencedor = diferenca > 0 ? pontos1 : pontos2;
+        
         resposta = (pontosVencedor==pontosMinimos && Math.abs(diferenca)>=2) || (pontosVencedor>pontosMinimos && Math.abs(diferenca)==2);
+        
         return resposta;
     }
 
@@ -129,14 +134,17 @@ public class PartidaDeVolei {
      */
     public boolean registrarPlacarSet(int pontosEquipe1, int pontosEquipe2) {
         boolean valoresValidos = false;
+
         if (setsDisputados < MAX_SETS && vencedorDoJogo().equals("Jogo em andamento")) {
             valoresValidos = validarPlacarSet(pontosEquipe1, pontosEquipe2);
+
             if(valoresValidos){
                 pontuacaoEquipe1.add(pontosEquipe1);
                 pontuacaoEquipe2.add(pontosEquipe2);
                 setsDisputados++;
             }
-        }       
+        }   
+            
         return valoresValidos;
     }
 
@@ -146,12 +154,15 @@ public class PartidaDeVolei {
      */
     public String vencedorDoJogo() {
         String vencedor = "Jogo em andamento";
+
         Equipe mandante = equipes.get(0);
         Equipe visitante = equipes.get(1);
-        if(setsVencidos(mandante)==3)
+
+        if (setsVencidos(mandante) == 3) {
             vencedor = mandante.getNome();
-        else if(setsVencidos(visitante)==3)
+        } else if (setsVencidos(visitante) == 3) {
                 vencedor = visitante.getNome();
+        }
         
         return vencedor;
     }
@@ -165,10 +176,11 @@ public class PartidaDeVolei {
     public int pontosTotaisEquipe(String equipe) {
         int total = 0;
         List<Integer> pontuacao = null;
+
         pontuacao =  equipe.equals(equipes.get(0).getNome()) ? pontuacaoEquipe1 : 
                      equipe.equals(equipes.get(1).getNome()) ? pontuacaoEquipe2 : null;
       
-        if(pontuacao != null){
+        if (pontuacao != null){
             for (int i = 0; i < setsDisputados(); i++) {
                total += pontuacao.get(i);
              }
@@ -185,13 +197,14 @@ public class PartidaDeVolei {
      */
     public int setsVencidosEquipe(String nomeEquipe) {
         int vencidos = 0;
+
         Equipe mandante = equipes.get(0);
         Equipe visitante = equipes.get(1);
         Equipe equipe = nomeEquipe.equals(mandante.getNome()) ? mandante : 
                         nomeEquipe.equals(visitante.getNome()) ? visitante : null;
       
-        if(equipe   !=  null)
-            vencidos = setsVencidos(equipe);
+        if (equipe   !=  null) vencidos = setsVencidos(equipe);
+
         return vencidos;
     }
 
@@ -211,10 +224,11 @@ public class PartidaDeVolei {
      */
     private int setsVencidos(Equipe equipe) {
         int vencidos = 0;
+
         List<Integer> time = pontuacaoEquipe1;
         List<Integer> outro = pontuacaoEquipe2;
 
-        if(equipe.equals(equipes.get(1))){
+        if (equipe.equals(equipes.get(1))){
             time = pontuacaoEquipe2;
             outro = pontuacaoEquipe1;
         }
@@ -222,7 +236,7 @@ public class PartidaDeVolei {
         for (int i = 0; i < setsDisputados; i++) {
             if(time.get(i) > outro.get(i))
                 vencidos++;
-        }
+        } 
         return vencidos;
     }
 }
